@@ -24,12 +24,12 @@ namespace WindowsFormsApplication1.KAOConsuperPanel
             int year;
             if (!int.TryParse(yearStr, out year))
             {
-                throw new Exception("Unkonw year string yearStr in cell " + startYearCell.Address);
+                throw new Exception("Summary: Unkonw year string yearStr in cell " + startYearCell.Address);
             }
             panel.year = year;
             panel.yearStr = yearStr;
 
-            Excel.Range lefttop = startYearCell.End[Excel.XlDirection.xlDown];
+            Excel.Range lefttop = startYearCell.Offset[1, 0];
             Excel.Range righttop = lefttop.End[Excel.XlDirection.xlToRight];
 
             int colStart = lefttop.Column;
@@ -40,7 +40,7 @@ namespace WindowsFormsApplication1.KAOConsuperPanel
 
             if (cols > 100 || cols < 2 || rows < 2)
             {
-                throw new Exception("表格大小不合理，请检查表的格式");
+                throw new Exception("Summary: 表格大小不合理，请检查表的格式");
             }
 
             Table res = new Table();
@@ -94,9 +94,9 @@ namespace WindowsFormsApplication1.KAOConsuperPanel
                 if (panel.city.Length == 0)
                 {
                     workbook.Close(false);
-                    throw new Exception("表格格式不正确，表格名称应该包括中文城市名。:" + strWithCity);
+                    throw new Exception("Summary: 表格格式不正确，表格名称应该包括中文城市名。:" + strWithCity);
                 }
-                Excel.Range yearCell = cityStartCell.Offset[1, 1];
+                Excel.Range yearCell = cityStartCell.Offset[0, 1].End[Excel.XlDirection.xlDown];
                 ParseTable(yearCell, panel);
                 res.Add(panel);
                 cityStartCell = cityStartCell.End[Excel.XlDirection.xlToRight];

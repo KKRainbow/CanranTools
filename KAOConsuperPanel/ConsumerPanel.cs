@@ -17,14 +17,16 @@ namespace WindowsFormsApplication1.KAOConsuperPanel
 
         public static TableTuple ParseTable(Excel.Range startYearCell)
         {
-            string yearStr = startYearCell.Value.ToString();
+            string yearStr = "a";
+            if (startYearCell.Value != null)
+                yearStr = startYearCell.Value.ToString();
             int year;
             if (!int.TryParse(yearStr, out year))
             {
-                throw new Exception("Unkonw year string yearStr in cell " + startYearCell.Address);
+                throw new Exception("Consumer: Unkonw year string yearStr in cell " + startYearCell.Address);
             }
 
-            Excel.Range lefttop = startYearCell.End[Excel.XlDirection.xlDown];
+            Excel.Range lefttop = startYearCell.Offset[1, 0];
             Excel.Range rightbottom = lefttop.End[Excel.XlDirection.xlDown].End[Excel.XlDirection.xlToRight];
             int cols = rightbottom.Column - lefttop.Column + 1;
             int rows = rightbottom.Row - lefttop.Row + 1;
@@ -43,6 +45,14 @@ namespace WindowsFormsApplication1.KAOConsuperPanel
                 for (int y = 0; y < cols; y++)
                 {
                     data[x][y] = values[x + 1, y + 1].ToString();
+                }
+                if (x == 0 && data[x].All(m => m.Trim() == "100"))
+                {
+                    data[x] = Enumerable.Repeat<string>("1", cols).ToArray();
+                    for (int y = 0; y < cols; y++)
+                    {
+                        range.Cells[x + 1, y + 1].Value = "1";
+                    }
                 }
             }
             return new TableTuple(year, range, data);
@@ -65,13 +75,12 @@ namespace WindowsFormsApplication1.KAOConsuperPanel
                 ConsumerPanel panel = new ConsumerPanel();
                 panel.city = city;
 
-                Excel.Range startCell = sheet.Cells[1, 2];
-                startCell = startCell.End[Excel.XlDirection.xlDown];
+                Excel.Range startCell = sheet.Cells[1, 1];
                 while (startCell.Column <= sheet.UsedRange.Columns.Count)
                 {
-                    string addr = startCell.Address;
-                    panel.tableDataList.Add(ConsumerPanel.ParseTable(startCell));
-                    startCell = startCell.End[Excel.XlDirection.xlToRight].End[Excel.XlDirection.xlToRight];
+                    Excel.Range yearCell = startCell.Offset[2, 1];
+                    panel.tableDataList.Add(ConsumerPanel.ParseTable(yearCell));
+                    startCell = startCell.End[Excel.XlDirection.xlToRight];
                 }
                 res.Add(panel);
             }
@@ -118,7 +127,7 @@ namespace WindowsFormsApplication1.KAOConsuperPanel
                     throw new Exception("Cannot find panel of city " + city);
                 }
 
-                Excel.Workbook book = app.Workbooks.Open(entry, ReadOnly: true);
+                Excel.Workbook book = app.Workbooks.Open(entry, ReadOnly: false);
                 if (curPanel.tableDataList.Count != book.Sheets.Count)
                 {
                     throw new Exception("Panel table List count not equal to sheets count");
