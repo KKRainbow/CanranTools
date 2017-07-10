@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace WindowsFormsApplication1.KAOConsuperPanel
 {
+    using System.Diagnostics;
     using System.IO;
     using System.Windows.Forms;
     using TableTuple = Tuple<int, Excel.Range, string[][]>;
@@ -55,6 +56,7 @@ namespace WindowsFormsApplication1.KAOConsuperPanel
                     }
                 }
             }
+            Trace.TraceInformation("Consumer table year is {0}, table is {1}", year, data.ToString());
             return new TableTuple(year, range, data);
         }
         public static List<ConsumerPanel> ReadConsumerPanels(Excel.Application app, string filename)
@@ -136,6 +138,7 @@ namespace WindowsFormsApplication1.KAOConsuperPanel
                 int idx = 0;
                 foreach (Excel.Worksheet curSheet in book.Sheets)
                 {
+                    Trace.TraceInformation("Copying to {0}:{1}", book.Name, curSheet.Name);
                     TableTuple curTuple = curPanel.tableDataList[idx++];
                     Excel.Range startYearRange = curSheet.UsedRange.Find(curTuple.Item1.ToString(),
                         Type.Missing, Excel.XlFindLookIn.xlValues, Excel.XlLookAt.xlPart,

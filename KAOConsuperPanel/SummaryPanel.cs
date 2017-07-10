@@ -7,6 +7,7 @@ using Excel = Microsoft.Office.Interop.Excel;
 
 namespace WindowsFormsApplication1.KAOConsuperPanel
 {
+    using System.Diagnostics;
     using System.IO;
     using System.Windows.Forms;
     using Table = List<string[]>;
@@ -60,6 +61,7 @@ namespace WindowsFormsApplication1.KAOConsuperPanel
                 res.Add(rowData);
             }
             panel.tableData = res;
+            Trace.TraceInformation("Summary table year is {0}, city is {1}, table is {2}", year, panel.city, res.ToString());
         }
         public static List<SummaryPanel> ReadSummaryPanels(Excel.Application app, string filename)
         {

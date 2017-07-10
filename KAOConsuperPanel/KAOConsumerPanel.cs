@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -50,6 +51,7 @@ namespace WindowsFormsApplication1
                 catch (Exception exc)
                 {
                     statusLabel.Text = "失败：" + exc.Message;
+                    Trace.TraceError(exc.ToString());
                 }
                 if (success)
                 {
@@ -80,6 +82,7 @@ namespace WindowsFormsApplication1
             }
             catch (Exception exc)
             {
+                Trace.TraceError(exc.ToString());
                 statusLabel.Text = "失败：" + exc.Message;
             }
             if (suc)
@@ -106,6 +109,7 @@ namespace WindowsFormsApplication1
                 }
                 catch (Exception exc)
                 {
+                    Trace.TraceError(exc.ToString());
                     statusLabel.Text = "失败：" + exc.Message;
                 }
                 if (success)
