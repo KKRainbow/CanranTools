@@ -8,6 +8,7 @@ using Excel = Microsoft.Office.Interop.Excel;
 using PowerPoint = Microsoft.Office.Interop.PowerPoint;
 using Office = Microsoft.Office.Core;
 using System.Text.RegularExpressions;
+using System.IO;
 
 namespace WindowsFormsApplication1
 {
@@ -15,9 +16,10 @@ namespace WindowsFormsApplication1
     {
         public delegate string[] RowFilter(string[] row);
         PowerPoint.Application ppt = null;
-        string tmplPPTFilename = "Resources/tmpl.pptx";
+        string tmplPPTFilename = "./Resources/tmpl.pptx";
         public ReportToChart(string filename = "D:/粲然的程序/测试/地区品牌酸奶得失.pptx")
         {
+            tmplPPTFilename = Path.Combine(Directory.GetCurrentDirectory(), "Resources\\tmpl.pptx");
         }
 
         private void ReplaceTextInSlide(PowerPoint.Slide slide, string from, string to)
